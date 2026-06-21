@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator; // <--- 1. Tambahkan ini di atas
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        //
+    }
+
+    public function boot(): void
+    {
+        // 2. Tambahkan baris ini agar tombol halamannya bergaya Bootstrap
+        Paginator::useBootstrapFive();
+    }
+}
