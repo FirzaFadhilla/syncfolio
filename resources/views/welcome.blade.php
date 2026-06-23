@@ -14,20 +14,20 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f8f9fa;
         }
+        
+        /* Sidebar Styling & Animations */
         .sidebar {
             position: fixed;
             top: 0;
             bottom: 0;
             left: 0;
-            z-index: 100;
+            z-index: 1045;
             width: 260px;
             background-color: #ffffff;
             border-right: 1px solid #dee2e6;
+            transition: transform 0.3s ease-in-out;
         }
-        .main-content {
-            margin-left: 260px;
-            padding: 2rem;
-        }
+        
         .nav-link {
             color: #6c757d;
             font-weight: 500;
@@ -39,17 +39,101 @@
             color: #4f46e5;
             background-color: #f0f0ff;
         }
+
+        /* Responsive Layout Settings */
+        @media (max-width: 991.98px) {
+            /* Sembunyikan sidebar di kiri layaknya drawer pada mobile */
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            /* Konten utama mengikuti layar */
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+                padding-top: 5.5rem; /* Ruang untuk mobile header */
+            }
+            
+            /* Tampilkan header navigasi khusus di mobile */
+            .mobile-header {
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1030;
+                background-color: #ffffff;
+                border-bottom: 1px solid #dee2e6;
+                padding: 1rem 1.5rem;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            }
+
+            /* Overlay gelap di belakang sidebar jika terbuka di mobile */
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.4);
+                z-index: 1040;
+                backdrop-filter: blur(2px);
+            }
+            .sidebar-overlay.show {
+                display: block;
+            }
+        }
+
+        @media (min-width: 992px) {
+            /* Tampilan Desktop normal */
+            .sidebar {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 260px;
+                padding: 2rem;
+            }
+            .mobile-header {
+                display: none;
+            }
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="sidebar p-3 d-flex flex-column justify-content-between">
+    <div class="mobile-header d-lg-none">
+        <div class="d-flex align-items-center gap-2">
+            <div class="bg-primary text-white rounded-3 d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;">
+                S
+            </div>
+            <h5 class="m-0 fw-bold text-dark">SyncFolio</h5>
+        </div>
+        <button class="btn btn-light border text-dark py-1 px-2" id="sidebarToggle">
+            <i class="bi bi-list fs-4"></i>
+        </button>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar p-3 d-flex flex-column justify-content-between" id="sidebar">
         <div>
-            <div class="d-flex align-items-center gap-2 px-2 py-3 border-bottom mb-3">
-                <div class="bg-primary text-white rounded-3 d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;">
-                    S
+            <div class="d-flex align-items-center justify-content-between px-2 py-3 border-bottom mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="bg-primary text-white rounded-3 d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;">
+                        S
+                    </div>
+                    <h5 class="m-0 fw-bold text-dark">SyncFolio</h5>
                 </div>
-                <h5 class="m-0 fw-bold text-dark">SyncFolio</h5>
+                <button class="btn btn-sm btn-light border d-lg-none" id="sidebarClose">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
 
             <nav class="nav flex-column">
@@ -65,20 +149,20 @@
             </nav>
         </div>
 
-        <div class="card border-0 bg-light p-3 rounded-4 text-center">
+        <div class="card border-0 bg-light p-3 rounded-4 text-center mt-4">
             <span class="small fw-bold text-dark d-block mb-2">Have a Portfolio?</span>
             <a href="{{ route('register') }}" class="btn btn-sm btn-primary rounded-3 fw-bold w-100">Join Now</a>
         </div>
     </div>
 
     <main class="main-content">
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 border-bottom pb-3 mb-4">
             <div>
                 <h4 class="fw-bold m-0 text-dark">Explore Creative Talents</h4>
             </div>
-            <div class="d-flex gap-2">
-                <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary rounded-3 fw-bold px-3">Login</a>
-                <a href="{{ route('register') }}" class="btn btn-sm btn-primary rounded-3 fw-bold px-3">Register</a>
+            <div class="d-flex gap-2 w-100 justify-content-md-end" style="max-width: 400px;">
+                <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary rounded-3 fw-bold px-3 flex-fill text-center">Login</a>
+                <a href="{{ route('register') }}" class="btn btn-sm btn-primary rounded-3 fw-bold px-3 flex-fill text-center">Register</a>
             </div>
         </div>
 
@@ -92,11 +176,11 @@
                         @endif
                         <div class="input-group">
                             <span class="input-group-text bg-light text-muted border-end-0 rounded-start-3"><i class="bi bi-search"></i></span>
-                            <input type="text" name="search" class="form-control bg-light border-start-0 border-end-0 text-sm py-2" placeholder="Search by talent name, location, or bio keywords..." value="{{ request('search') }}">
+                            <input type="text" name="search" class="form-control bg-light border-start-0 border-end-0 text-sm py-2" placeholder="Search by name, location, or bio..." value="{{ request('search') }}">
                             @if(request('search'))
                                 <a href="/" class="btn btn-light border-top border-bottom text-muted d-flex align-items-center justify-content-center px-2"><i class="bi bi-x-circle-fill"></i></a>
                             @endif
-                            <button type="submit" class="btn btn-dark rounded-end-3 text-sm px-4 fw-bold">Search</button>
+                            <button type="submit" class="btn btn-dark rounded-end-3 text-sm px-3 px-sm-4 fw-bold">Search</button>
                         </div>
                     </form>
                     <span class="text-muted fw-bold text-uppercase small d-block mb-2" style="font-size: 0.7rem;">Filter by Skill</span>
@@ -114,7 +198,7 @@
 
                 <div class="d-flex flex-column gap-3">
                     @forelse ($users as $u)
-                        <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <div class="card border-0 shadow-sm rounded-4 p-3 p-sm-4">
                             <div class="d-flex flex-column flex-sm-row gap-3 align-items-start">
                                 
                                 @if($u->avatar)
@@ -150,7 +234,7 @@
                                                 default => 'Not Available',
                                             };
                                         @endphp
-                                        <span class="badge {{ $badgeClass }} px-2.5 py-1.5 rounded-3 fw-semibold text-xs">
+                                        <span class="badge {{ $badgeClass }} px-2.5 py-1.5 rounded-3 fw-semibold text-xs mt-2 mt-sm-0">
                                             ● {{ $badgeText }}
                                         </span>
                                     </div>
@@ -159,7 +243,7 @@
                                         {{ $u->bio ?? "This creator hasn't written a bio yet." }}
                                     </p>
 
-                                    <div class="d-flex flex-wrap gap-1.5 mb-3">
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
                                         @forelse ($u->skills as $s)
                                             <span class="badge bg-light text-dark border rounded-2 px-2.5 py-1.5 text-xs font-medium">
                                                 {{ $s->name }}
@@ -169,11 +253,11 @@
                                         @endforelse
                                     </div>
 
-                                    <div class="border-top pt-3 d-flex justify-content-end gap-2">
-                                        <a href="{{ route('login') }}" class="btn btn-sm btn-light border rounded-3 fw-bold px-3 py-2 text-secondary">
+                                    <div class="border-top pt-3 d-flex flex-wrap flex-sm-nowrap justify-content-start justify-content-sm-end gap-2">
+                                        <a href="{{ route('login') }}" class="btn btn-sm btn-light border rounded-3 fw-bold px-3 py-2 text-secondary flex-fill flex-sm-grow-0 text-center">
                                             Send Message
                                         </a>
-                                        <a href="{{ route('login') }}" class="btn btn-sm btn-primary rounded-3 fw-bold px-3 py-2 shadow-sm">
+                                        <a href="{{ route('login') }}" class="btn btn-sm btn-primary rounded-3 fw-bold px-3 py-2 shadow-sm flex-fill flex-sm-grow-0 text-center">
                                             Request Collaboration
                                         </a>
                                     </div>
@@ -182,15 +266,14 @@
                             </div>
                         </div>
 
-                        <!-- MODAL PORTFOLIO -->
                         <div class="modal fade" id="portfolioModal{{ $u->id }}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                                 <div class="modal-content rounded-4 border-0 shadow">
                                     <div class="modal-header border-bottom p-4 bg-light/50">
                                         <h5 class="modal-title fw-bold text-dark">{{ $u->name }}'s Portfolio</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body p-4 overflow-y-auto" style="max-height: 400px;">
+                                    <div class="modal-body p-4">
                                         <div class="vstack gap-3">
                                             @forelse($u->projects as $proj)
                                                 <div class="p-3 border rounded-4 bg-light/30">
@@ -215,7 +298,6 @@
             </div>
 
             <div class="col-lg-4">
-                <!-- START: SKILL SPOTLIGHTS DINAMIS -->
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <span class="text-muted fw-bold text-uppercase small d-block mb-3" style="font-size: 0.7rem;">Skill Spotlights</span>
                     <div class="vstack gap-3">
@@ -242,8 +324,6 @@
                         @endforelse
                     </div>
                 </div>
-                <!-- END: SKILL SPOTLIGHTS DINAMIS -->
-
                 <div class="card border-0 text-white rounded-4 p-4" style="background: linear-gradient(135deg, #312e81, #581c87);">
                     <h6 class="fw-bold mb-2">Want to Collaborate?</h6>
                     <p class="small m-0 text-white-50" style="font-size: 0.75rem;">
@@ -255,5 +335,24 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            }
+
+            // Bind events
+            if(sidebarToggle) sidebarToggle.addEventListener('click', toggleSidebar);
+            if(sidebarClose) sidebarClose.addEventListener('click', toggleSidebar);
+            if(overlay) overlay.addEventListener('click', toggleSidebar);
+        });
+    </script>
 </body>
 </html>
